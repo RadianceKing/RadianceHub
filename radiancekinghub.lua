@@ -408,3 +408,16 @@ Content = "Subscribe to my YouTube channel RadianceMurder",
 Image = "rbxassetid://4483345998",
 Time = 15
 })
+
+local ContactsTab = Window:MakeTab({
+Name = "Contacts",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+
+ContactsTab:AddButton({
+Name = "Copy Telegram Link",
+Callback = function()
+setclipboard("https://t.me/+6sKIWMGvqsswMjZi")
+end
+})
