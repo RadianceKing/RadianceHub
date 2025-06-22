@@ -13,11 +13,10 @@ Icon = "rbxassetid://4483345998",
 PremiumOnly = false
 })
 
-local deletionEnabled = false -- Флаг для отслеживания состояния удаления объектов
-local redColor = Color3.fromRGB(255, 100, 100) -- Слегка красный цвет
-local NoclipConnection -- Переменная для хранения соединения
+local deletionEnabled = false
+local redColor = Color3.fromRGB(255, 100, 100)
+local NoclipConnection
 
--- Функция ноклипа
 local function noclip()
 local Clip = false
 local function Nocl()
@@ -28,7 +27,7 @@ v.CanCollide = false
 end
 end
 end
-wait(0.21) -- basic optimization
+wait(0.21)
 end
 NoclipConnection = game:GetService("RunService").Stepped:Connect(Nocl)
 end
@@ -39,22 +38,20 @@ NoclipConnection:Disconnect()
 end
 end
 
--- Checkbox для ноклипа
 MiscTab:AddToggle({
 Name = "NoClip",
 Default = false,
 Callback = function(state)
 if state then
-noclip() -- Включаем ноклип
+noclip()
 print("NoClip enabled.")
 else
-clip() -- Выключаем ноклип
+clip()
 print("NoClip disabled.")
 end
 end
 })
 
--- Checkbox для удаления объектов
 MiscTab:AddToggle({
 Name = "Ctrl + Delete | delete parts",
 Default = false,
@@ -64,24 +61,21 @@ print("Part deletion enabled.")
 local Plr = game:GetService("Players").LocalPlayer
 local Mouse = Plr:GetMouse()
 
--- Подключение функции удаления объектов
 deletionConnection = Mouse.Button1Down:Connect(function()
 if not game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then return end
 if not Mouse.Target then return end
 Mouse.Target:Destroy()
 end)
 else
--- Отключаем удаление
 if deletionConnection then
 deletionConnection:Disconnect()
-deletionConnection = nil -- Убираем ссылку на соединение
+deletionConnection = nil
 end
 print("Part deletion disabled.")
 end
 end
 })
 
--- Checkbox для включения бесконечного прыжка
 MiscTab:AddToggle({
 Name = "Enable Infinite Jump",
 Default = false,
@@ -94,14 +88,13 @@ print("Infinite Jump enabled.")
 else
 if infiniteJumpConnection then
 infiniteJumpConnection:Disconnect()
-infiniteJumpConnection = nil -- Удаляем ссылку на соединение
+infiniteJumpConnection = nil
 end
 print("Infinite Jump disabled.")
 end
 end
 })
 
--- Слайдер для изменения скорости
 MiscTab:AddSlider({
 Name = "Walkspeed",
 Min = 1,
@@ -115,7 +108,6 @@ game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
 end
 })
 
--- Слайдер для изменения гравитации
 MiscTab:AddSlider({
 Name = "Gravity",
 Min = 1,
@@ -129,7 +121,6 @@ game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
 end
 })
 
--- Кнопка для загрузки Infinite Yield
 MiscTab:AddButton({
 Name = "Load Infinite Yield",
 Callback = function()
@@ -138,7 +129,6 @@ print("Infinite Yield loaded.")
 end
 })
 
--- Кнопка для включения Full Bright
 MiscTab:AddButton({
 Name = "Fullbright",
 Callback = function()
@@ -151,14 +141,12 @@ Light.ColorShift_Top = Color3.new(1, 1, 1)
 end
 
 dofullbright()
-
-Light.LightingChanged:Connect(dofullbright) -- Обновляет цвета при изменении освещения
+Light.LightingChanged:Connect(dofullbright)
 fullBrightEnabled = true
 print("Full Bright enabled.")
 end
 })
 
--- Кнопка для включения ESP
 MiscTab:AddButton({
 Name = "ESP",
 Callback = function()
@@ -167,22 +155,20 @@ print("ESP loaded.")
 end
 })
 
--- Кнопка для телепортации в The Bunker
 BunkerTab:AddButton({
 Name = "Teleport to Bunker",
 Callback = function()
 local player = game.Players.LocalPlayer
-local id = player.UserId -- Получаем ID игрока
+local id = player.UserId
 local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
 
--- Формируем путь к Bunker с использованием ID игрока
 local targetPartName = tostring(id) .. "_Bunker"
 local targetPart = workspace.Bunkers:FindFirstChild(targetPartName)
 
 if targetPart and targetPart:FindFirstChild("Stairs") then
-local stairs = targetPart.Stairs:GetChildren()[11] -- Или нужный индекс
+local stairs = targetPart.Stairs:GetChildren()[11]
 if stairs then
-humanoidRootPart.CFrame = stairs.CFrame -- Телепортация игрока
+humanoidRootPart.CFrame = stairs.CFrame
 print("Teleported to the bunker.")
 else
 warn("No valid stairs found!")
@@ -193,16 +179,15 @@ end
 end
 })
 
--- Кнопка для телепортации к указанному объекту в магазине
 BunkerTab:AddButton({
 Name = "Teleport to Store",
 Callback = function()
 local player = game.Players.LocalPlayer
 local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
 
-local targetPart = workspace.Market.Market.Market:GetChildren()[96]:GetChildren()[4]:GetChildren()[2] -- Получаем нужный MeshPart
+local targetPart = workspace.Market.Market.Market:GetChildren()[96]:GetChildren()[4]:GetChildren()[2]
 if humanoidRootPart and targetPart then
-humanoidRootPart.CFrame = targetPart.CFrame -- Телепортация игрока
+humanoidRootPart.CFrame = targetPart.CFrame
 print("Teleported to the specified object in the market.")
 else
 warn("HumanoidRootPart or target part not found!")
@@ -210,7 +195,6 @@ end
 end
 })
 
--- Кнопка для удаления дверей (левой и правой) и TGaz
 BunkerTab:AddButton({
 Name = "Remove Rare furniture doors",
 Callback = function()
@@ -241,7 +225,6 @@ end
 end
 })
 
--- Кнопка для перемещения Tool предметов в инвентарь игрока
 BunkerTab:AddButton({
 Name = "Collect All Food",
 Callback = function()
@@ -250,19 +233,18 @@ local backpack = player.Backpack
 
 for _, tool in pairs(workspace:GetChildren()) do
 if tool:IsA("Tool") and (tool.Name == "Apple" or tool.Name == "Cola" or tool.Name == "Burger" or tool.Name == "Pizza" or tool.Name == "Water") then
-tool.Parent = backpack -- Перемещаем предмет в инвентарь
+tool.Parent = backpack
 print(tool.Name .. " moved to inventory.")
 end
 end
 end
 })
 
--- Кнопка для удаления предметов GamePass
 BunkerTab:AddButton({
 Name = "Unlock Gamepass Rooms",
 Callback = function()
 local player = game.Players.LocalPlayer
-local id = player.UserId -- Получаем ID игрока
+local id = player.UserId
 local bunkerPath = "Bunkers[" .. tostring(id) .. "_Bunker]"
 
 local bunker = workspace.Bunkers:FindFirstChild(tostring(id) .. "_Bunker")
@@ -289,73 +271,62 @@ end
 end
 })
 
--- Переменные
 local players = game:GetService("Players")
 local localPlayer = players.LocalPlayer
 local runService = game:GetService("RunService")
 
--- Флаг для управления ESP
 local espEnabled = false
 
--- Функция для создания бокса ESP
 local function createESPBox(character, outlineColor)
 local highlight = Instance.new("Highlight")
 highlight.Name = character.Name .. "_ESP"
 highlight.Adornee = character
-highlight.FillTransparency = 1 -- Делаем заполнение бокса невидимым
-highlight.OutlineColor = outlineColor -- Устанавливаем цвет контура
-highlight.OutlineTransparency = 0 -- Полностью видимый контур
-highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop -- Видимость через стены
+highlight.FillTransparency = 1
+highlight.OutlineColor = outlineColor
+highlight.OutlineTransparency = 0
+highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 highlight.Parent = character
 end
 
--- Функция для добавления ESP
 local function addESP()
 if espEnabled then
 local targetPlayer = players:FindFirstChild("LurkerNight")
 if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
--- Проверка, существует ли уже ESP, чтобы избежать дублирования
 if not targetPlayer.Character:FindFirstChild(targetPlayer.Name .. "_ESP") then
-createESPBox(targetPlayer.Character, Color3.new(1, 0, 0)) -- Красный цвет для LurkerNight
+createESPBox(targetPlayer.Character, Color3.new(1, 0, 0))
 end
 end
 
--- Добавляем ESP для всех объектов "JumperNight"
 for _, object in pairs(workspace:GetChildren()) do
 if object.Name == "JumperNight" then
 for _, part in pairs(object:GetChildren()) do
 if part:IsA("Model") and part:FindFirstChild("UpperTorso") then
--- Проверяем, существует ли ESP, чтобы избежать дублирования
 if not part:FindFirstChild(part.Name .. "_ESP") then
-createESPBox(part, Color3.new(0, 1, 0)) -- Зеленый цвет для JumperNight
+createESPBox(part, Color3.new(0, 1, 0))
 end
 end
 end
 end
 end
 
--- Добавляем ESP для всех объектов "TheLurker"
 for _, object in pairs(workspace:GetChildren()) do
 if object.Name == "LurkerNight" then
 for _, part in pairs(object:GetChildren()) do
 if part:IsA("Model") and part:FindFirstChild("UpperTorso") then
--- Проверяем, существует ли ESP, чтобы избежать дублирования
 if not part:FindFirstChild(part.Name .. "_ESP") then
-createESPBox(part, Color3.new(0, 0, 1)) -- Синий цвет для TheLurker
+createESPBox(part, Color3.new(0, 0, 1))
 end
 end
 end
 end
 end
 
--- Добавляем ESP для всех объектов "TheCatcher"
 for _, object in pairs(workspace:GetChildren()) do
 if object.Name == "CatcherNight" then
 for _, part in pairs(object:GetChildren()) do
 if part:IsA("Model") and part:FindFirstChild("UpperTorso") then
--- Проверяем, существует ли ESP, чтобы избежать дублирования
 if not part:FindFirstChild(part.Name .. "_ESP") then
-createESPBox(part, Color3.new(1, 0, 1)) -- Розовый цвет для TheCatcher
+createESPBox(part, Color3.new(1, 0, 1))
 end
 end
 end
@@ -364,14 +335,12 @@ end
 end
 end
 
--- Кнопка переключения ESP в уже существующем BunkerTab
 BunkerTab:AddToggle({
 Name = "Enemy ESP",
 Default = false,
 Callback = function(state)
-espEnabled = state -- Изменяем флаг состояния ESP
+espEnabled = state
 if not state then
--- Если ESP отключен, очищаем существующие ESP
 for _, player in pairs(players:GetPlayers()) do
 if player.Character then
 local existingESP = player.Character:FindFirstChild(player.Name .. "_ESP")
@@ -381,7 +350,6 @@ end
 end
 end
 
--- Удаляем ESP для всех JumperNight
 for _, object in pairs(workspace:GetChildren()) do
 if object.Name == "JumperNight" then
 for _, part in pairs(object:GetChildren()) do
@@ -395,7 +363,6 @@ end
 end
 end
 
--- Удаляем ESP для всех TheLurker
 for _, object in pairs(workspace:GetChildren()) do
 if object.Name == "LurkerNight" then
 for _, part in pairs(object:GetChildren()) do
@@ -409,7 +376,6 @@ end
 end
 end
 
--- Удаляем ESP для всех TheCatcher
 for _, object in pairs(workspace:GetChildren()) do
 if object.Name == "CatcherNight" then
 for _, part in pairs(object:GetChildren()) do
@@ -426,12 +392,10 @@ end
 end
 })
 
--- Запуск функции добавления ESP непрерывно
 runService.RenderStepped:Connect(function()
 addESP()
 end)
 
--- Удаление ESP при выходе игрока
 players.PlayerRemoving:Connect(function(player)
 if player.Character and player.Character:FindFirstChild(player.Name .. "_ESP") then
 player.Character[player.Name .. "_ESP"]:Destroy()
@@ -439,8 +403,8 @@ end
 end)
 
 OrionLib:MakeNotification({
-	Name = "Thank You for use my script !",
-	Content = "sub on my yt channel RadianceMurder",
-	Image = "rbxassetid://4483345998",
-	Time = 15
+Name = "Thank You for using my script!",
+Content = "Subscribe to my YouTube channel RadianceMurder",
+Image = "rbxassetid://4483345998",
+Time = 15
 })
